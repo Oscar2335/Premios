@@ -352,10 +352,14 @@ document.addEventListener("fullscreenchange", () => {
   iniciarAutoplayCarrusel();
 });
 
-function construirUrlCorreo(canal, asunto, cuerpo) {
-  const to = encodeURIComponent(DESTINO_EMAIL);
+function construirUrlCorreo(canal, asunto, cuerpo, toAddress) {
+  const to = encodeURIComponent(toAddress || DESTINO_EMAIL);
   const subject = encodeURIComponent(asunto);
   const body = encodeURIComponent(cuerpo);
+
+  if (canal === "mailto") {
+    return `mailto:${to}?subject=${subject}&body=${body}`;
+  }
 
   if (canal === "gmail") {
     return `https://mail.google.com/mail/?view=cm&fs=1&to=${to}&su=${subject}&body=${body}`;
@@ -369,7 +373,12 @@ function construirUrlCorreo(canal, asunto, cuerpo) {
     return `https://compose.mail.yahoo.com/?to=${to}&subject=${subject}&body=${body}`;
   }
 
-  return `mailto:${DESTINO_EMAIL}?subject=${subject}&body=${body}`;
+  return `mailto:${to}?subject=${subject}&body=${body}`;
+}
+
+function esDispositivoMovil() {
+  const ua = navigator.userAgent || "";
+  return /Mobi|Android|iPhone|iPad|iPod|IEMobile|Opera Mini/i.test(ua);
 }
 
 proposalForm.addEventListener("submit", (event) => {
@@ -378,7 +387,8 @@ proposalForm.addEventListener("submit", (event) => {
   const categoria = proposalForm.categoria.value.trim();
   const premiado = proposalForm.premiado.value.trim();
   const justificacion = proposalForm.justificacion.value.trim();
-  const canalEnvio = "gmail";
+  // Elegir canal: en móvil usar mailto para abrir la app nativa, en escritorio usar Gmail web
+  const canalEnvio = esDispositivoMovil() ? "mailto" : "gmail";
 
   if (!categoria || !premiado || !justificacion) {
     mostrarError("Debes completar todos los campos antes de enviar.");
@@ -392,6 +402,13 @@ proposalForm.addEventListener("submit", (event) => {
   ].join("\n");
 
   const destino = construirUrlCorreo(canalEnvio, asunto, cuerpo);
+
+  if (canalEnvio === "mailto") {
+    mostrarOk("Se abrirá la app de correo con un borrador para que puedas enviarlo.");
+    // Abrimos mailto para que el móvil lance la app nativa con asunto y cuerpo rellenados
+    window.location.href = destino;
+    return;
+  }
 
   mostrarOk("Se abrirá Gmail en una pestaña nueva para que puedas enviarlo.");
   const ventana = window.open(destino, "_blank");
