@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Premios 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" type="image/png" href="img/logo.png">
+</head>
+
+<body>
+  <div class="background-glow"></div>
+
+  <header class="site-header">
+    <nav class="top-nav" aria-label="Navegación principal">
+      <button id="btnNavInicio" class="btn-secondary" type="button">Inicio</button>
+    </nav>
+    <div class="logo-slot" aria-label="Logotipo Premios 2026">
+      <img src="img/logo.png" alt="Logotipo Premios 2026" />
+    </div>
+    <h1>Premios 2026</h1>
+    <div class="logo-slot" aria-label="Logotipo Premios 2026 derecha">
+      <img src="img/logo.png" alt="Logotipo Premios 2026" />
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="inicio" class="panel active" aria-labelledby="titulo-inicio">
+      <h2 id="titulo-inicio">Celebra la excelencia</h2>
+      <p>
+        Comparte una propuesta para reconocer a quien más lo merece.
+      </p>
+      <button id="btnPropuesta" class="btn-primary" type="button">Enviar propuesta</button>
+    </section>
+
+    <section id="carruselInicio" class="carousel-section" aria-label="Galería destacada">
+      <div class="carousel" aria-label="Carrusel de imágenes">
+        <button class="carousel-arrow carousel-arrow-prev" type="button" aria-label="Imagen anterior">&larr;</button>
+
+        <div class="carousel-viewport">
+          <div class="carousel-track" data-carousel-track></div>
+        </div>
+
+        <button class="carousel-arrow carousel-arrow-next" type="button" aria-label="Siguiente imagen">&rarr;</button>
+      </div>
+
+      <div class="carousel-dots" data-carousel-dots aria-label="Seleccionar imagen"></div>
+    </section>
+
+    <section id="formulario" class="panel" aria-labelledby="titulo-formulario">
+      <h2 id="titulo-formulario">Formulario de propuesta</h2>
+      <form id="proposalForm" novalidate>
+        <div class="field">
+          <label for="categoria">Categoría</label>
+          <input id="categoria" name="categoria" type="text" placeholder="Escribe la categoría" required />
+        </div>
+
+        <div class="field">
+          <label for="premiado">Premiado</label>
+          <input id="premiado" name="premiado" type="text" placeholder="Escribe el premiado" required />
+        </div>
+
+        <div class="field">
+          <label for="justificacion">Justificación/Motivo</label>
+          <textarea id="justificacion" name="justificacion" rows="5" placeholder="Escribe la justificación/motivo"
+            required></textarea>
+        </div>
+
+        <p id="statusMessage" class="status" role="alert" aria-live="polite"></p>
+
+        <div class="actions">
+          <button class="btn-primary" type="submit">Enviar</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+
+</html>

@@ -41,6 +41,7 @@ body {
   from {
     transform: translateY(0) scale(1);
   }
+
   to {
     transform: translateY(-10px) scale(1.04);
   }
@@ -342,4 +343,87 @@ button:hover {
   .carousel-track {
     --carousel-slide-width: 76%;
   }
+}
+
+/* Privacy Page Styles */
+.login-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  flex: 1;
+}
+
+.login-container {
+  width: min(92%, 400px);
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 1rem;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+  padding: 2.5rem 1.8rem;
+  text-align: center;
+}
+
+.login-container h1 {
+  font-size: 1.8rem;
+  margin: 0.8rem 0;
+  letter-spacing: 0.02em;
+}
+
+.login-container>p {
+  color: var(--text-soft);
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+}
+
+#loginForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.login-container .field {
+  text-align: left;
+}
+
+#accessCode {
+  width: 100%;
+}
+
+.error-message {
+  color: var(--danger);
+  font-size: 0.85rem;
+  margin-top: 0.4rem;
+  display: none;
+  animation: shake 0.3s ease-in-out;
+}
+
+.error-message.show {
+  display: block;
+}
+
+#accessCode.error {
+  border-color: var(--danger) !important;
+  box-shadow: 0 0 0 3px rgba(255, 127, 168, 0.22) !important;
+}
+
+@keyframes shake {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-4px);
+  }
+
+  75% {
+    transform: translateX(4px);
+  }
+}
+
+.login-container .btn-primary {
+  width: 100%;
 }

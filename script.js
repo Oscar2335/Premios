@@ -102,7 +102,7 @@ function solicitarPantallaCompleta(elemento) {
   if (!elemento) return;
 
   if (typeof elemento.requestFullscreen === "function") {
-    elemento.requestFullscreen().catch(() => {});
+    elemento.requestFullscreen().catch(() => { });
     return;
   }
 
@@ -125,7 +125,7 @@ function habilitarVistaCompletaVideos() {
       video.loop = false;
       const promesaPlay = video.play();
       if (promesaPlay && typeof promesaPlay.catch === "function") {
-        promesaPlay.catch(() => {});
+        promesaPlay.catch(() => { });
       }
       detenerAutoplayCarrusel();
       solicitarPantallaCompleta(video);
@@ -215,7 +215,7 @@ function actualizarCarrusel(animar = true) {
     if (index === carouselTrackIndex) {
       const promesaPlay = video.play();
       if (promesaPlay && typeof promesaPlay.catch === "function") {
-        promesaPlay.catch(() => {});
+        promesaPlay.catch(() => { });
       }
       return;
     }
@@ -301,16 +301,20 @@ function corregirLoopCarrusel() {
   }
 }
 
-btnPropuesta.addEventListener("click", () => {
-  statusMessage.textContent = "";
-  mostrarSeccion(sectionFormulario);
-});
+if (btnPropuesta) {
+  btnPropuesta.addEventListener("click", () => {
+    statusMessage.textContent = "";
+    mostrarSeccion(sectionFormulario);
+  });
+}
 
-btnNavInicio.addEventListener("click", () => {
-  statusMessage.textContent = "";
-  proposalForm.reset();
-  mostrarSeccion(sectionInicio);
-});
+if (btnNavInicio) {
+  btnNavInicio.addEventListener("click", () => {
+    statusMessage.textContent = "";
+    proposalForm.reset();
+    mostrarSeccion(sectionInicio);
+  });
+}
 
 poblarCarruselConMedios();
 habilitarVistaCompletaVideos();
@@ -381,41 +385,83 @@ function esDispositivoMovil() {
   return /Mobi|Android|iPhone|iPad|iPod|IEMobile|Opera Mini/i.test(ua);
 }
 
-proposalForm.addEventListener("submit", (event) => {
+if (proposalForm) {
+  proposalForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const categoria = proposalForm.categoria.value.trim();
+    const premiado = proposalForm.premiado.value.trim();
+    const justificacion = proposalForm.justificacion.value.trim();
+    // Elegir canal: en móvil usar mailto para abrir la app nativa, en escritorio usar Gmail web
+    const canalEnvio = esDispositivoMovil() ? "mailto" : "gmail";
+
+    if (!categoria || !premiado || !justificacion) {
+      mostrarError("Debes completar todos los campos antes de enviar.");
+      return;
+    }
+
+    const asunto = categoria;
+    const cuerpo = [
+      `Premiado: ${premiado}`,
+      `Justificación/Motivo: ${justificacion}`,
+    ].join("\n");
+
+    const destino = construirUrlCorreo(canalEnvio, asunto, cuerpo);
+
+    if (canalEnvio === "mailto") {
+      mostrarOk("Se abrirá la app de correo con un borrador para que puedas enviarlo.");
+      // Abrimos mailto para que el móvil lance la app nativa con asunto y cuerpo rellenados
+      window.location.href = destino;
+      return;
+    }
+
+    mostrarOk("Se abrirá Gmail en una pestaña nueva para que puedas enviarlo.");
+    const ventana = window.open(destino, "_blank");
+
+    if (ventana) {
+      ventana.opener = null;
+    } else {
+      window.location.href = destino;
+    }
+  });
+}
+
+
+// ==========================================
+// Logica de Login (privacy.html)
+// ==========================================
+const CORRECT_CODE = "butaneros2026";
+
+function handleLogin(event) {
   event.preventDefault();
 
-  const categoria = proposalForm.categoria.value.trim();
-  const premiado = proposalForm.premiado.value.trim();
-  const justificacion = proposalForm.justificacion.value.trim();
-  // Elegir canal: en móvil usar mailto para abrir la app nativa, en escritorio usar Gmail web
-  const canalEnvio = esDispositivoMovil() ? "mailto" : "gmail";
+  const accessCodeInput = document.getElementById("accessCode");
+  const errorMessage = document.getElementById("errorMessage");
 
-  if (!categoria || !premiado || !justificacion) {
-    mostrarError("Debes completar todos los campos antes de enviar.");
-    return;
-  }
+  if (!accessCodeInput || !errorMessage) return;
 
-  const asunto = categoria;
-  const cuerpo = [
-    `Premiado: ${premiado}`,
-    `Justificación/Motivo: ${justificacion}`,
-  ].join("\n");
+  const enteredCode = accessCodeInput.value.trim();
 
-  const destino = construirUrlCorreo(canalEnvio, asunto, cuerpo);
+  // Limpiar errores previos
+  accessCodeInput.classList.remove("error");
+  errorMessage.classList.remove("show");
 
-  if (canalEnvio === "mailto") {
-    mostrarOk("Se abrirá la app de correo con un borrador para que puedas enviarlo.");
-    // Abrimos mailto para que el móvil lance la app nativa con asunto y cuerpo rellenados
-    window.location.href = destino;
-    return;
-  }
-
-  mostrarOk("Se abrirá Gmail en una pestaña nueva para que puedas enviarlo.");
-  const ventana = window.open(destino, "_blank");
-
-  if (ventana) {
-    ventana.opener = null;
+  if (enteredCode === CORRECT_CODE) {
+    // Código correcto - redirigir a premios.html
+    window.location.href = "premios.html";
   } else {
-    window.location.href = destino;
+    // Código incorrecto - mostrar error
+    accessCodeInput.classList.add("error");
+    errorMessage.classList.add("show");
+    accessCodeInput.value = "";
+    accessCodeInput.focus();
+  }
+}
+
+// Enfocar el campo al cargar la página si existe
+window.addEventListener("load", () => {
+  const accessCodeInput = document.getElementById("accessCode");
+  if (accessCodeInput) {
+    accessCodeInput.focus();
   }
 });
