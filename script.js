@@ -447,8 +447,18 @@ function handleLogin(event) {
   errorMessage.classList.remove("show");
 
   if (enteredCode === CORRECT_CODE) {
-    // Código correcto - redirigir a premios.html
-    window.location.href = "premios.html";
+    // Código correcto - mostrar sección de premios
+    const loginSection = document.getElementById("loginSection");
+    const premiosSection = document.getElementById("premiosSection");
+    
+    if (loginSection && premiosSection) {
+      loginSection.style.display = "none";
+      premiosSection.style.display = "block";
+      
+      // Inicializar carrusel y otros elementos
+      poblarCarruselConMedios();
+      configurarCarrusel();
+    }
   } else {
     // Código incorrecto - mostrar error
     accessCodeInput.classList.add("error");
@@ -465,3 +475,19 @@ window.addEventListener("load", () => {
     accessCodeInput.focus();
   }
 });
+
+// Manejadores para botones de navegación - Próximamente
+const btnNavParticipantes = document.getElementById("btnNavParticipantes");
+const btnNavVotar = document.getElementById("btnNavVotar");
+
+if (btnNavParticipantes) {
+  btnNavParticipantes.addEventListener("click", () => {
+    alert("Próximamente");
+  });
+}
+
+if (btnNavVotar) {
+  btnNavVotar.addEventListener("click", () => {
+    alert("Próximamente");
+  });
+}
